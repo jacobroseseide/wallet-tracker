@@ -40,6 +40,28 @@ app.get('/api/blockchain/info', async (req: Request, res: Response) => {
   }
 });
 
+// Get wallet transactions
+app.get('/api/wallet/:address/transactions', async (req: Request, res: Response) => {
+  try {
+    const { address } = req.params;
+    const limit = parseInt(req.query.limit as string) || 10;
+    
+    const { getWalletTransactions } = await import('./utils/blockchain');
+    const transactions = await getWalletTransactions(address, limit);
+    
+    res.json({
+      address,
+      transactions,
+      count: transactions.length
+    });
+  } catch (error: any) {
+    console.error('Error fetching wallet transactions:', error);
+    res.status(400).json({ 
+      error: error.message || 'Failed to fetch transactions'
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
