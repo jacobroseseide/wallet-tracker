@@ -20,6 +20,26 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
+// Blockchain endpoint
+app.get('/api/blockchain/info', async (req: Request, res: Response) => {
+  try {
+    const { getBlockNumber } = await import('./utils/blockchain');
+    const blockNumber = await getBlockNumber();
+    
+    res.json({
+      blockNumber,
+      network: process.env.ALCHEMY_NETWORK || 'eth-mainnet',
+      connected: true
+    });
+  } catch (error) {
+    console.error('Blockchain error:', error);
+    res.status(500).json({ 
+      error: 'Failed to connect to blockchain',
+      connected: false 
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
