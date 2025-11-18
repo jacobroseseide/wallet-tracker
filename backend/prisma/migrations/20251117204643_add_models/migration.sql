@@ -1,4 +1,4 @@
--- CreateTable
+    -- CreateTable
 CREATE TABLE "Wallet" (
     "id" TEXT NOT NULL,
     "address" TEXT NOT NULL,
